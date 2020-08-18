@@ -1,11 +1,28 @@
 body {
   font-family: Cochin, Cambria, Georgia, Times, 'Times New Roman', serif;
 }
+a,
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+.advice-btn:hover,
+i {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+i {
+  font-size: 40px;
+}
 
 .header-style,
-.advice-btn {
+.advice-btn,
+i {
   background-color: #2E0A53;
   color: white;
+  border: none;
 }
 
 .con-height {
@@ -13,7 +30,6 @@ body {
 }
 
 .advice-btn {
-  border: none;
   border-radius: 36px;
   font-size: 1.2rem;
 }
@@ -21,4 +37,8 @@ body {
 .con-background {
   background-image: url(./images/Pawprint-Background.jpg);
   background-size: cover;
+}
+
+.pt-200 {
+  padding-top: 200px;
 }
