@@ -7,7 +7,7 @@ a:active {
   text-decoration: none;
 }
 
-.advice-btn:hover,
+.btn-props:hover,
 i {
   cursor: pointer;
   text-decoration: none;
@@ -18,11 +18,11 @@ i {
 }
 
 .header-style,
-.advice-btn,
+.btn-props,
 .quote,
 i {
   background-color: #2E0A53;
-  color: white;
+  color: whitesmoke;
   border: none;
 }
 
@@ -39,9 +39,10 @@ i {
   height: 100vh;
 }
 
-.advice-btn {
+.btn-props {
   border-radius: 36px;
   font-size: 1.2rem;
+  width: 228.98px;
 }
 
 .con-background {
@@ -49,6 +50,10 @@ i {
   background-size: cover;
 }
 
-.pt-200 {
-  padding-top: 200px;
+.pt-150 {
+  padding-top: 150px;
+}
+
+#insult-btn {
+  color: red;
 }
