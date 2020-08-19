@@ -19,10 +19,20 @@ i {
 
 .header-style,
 .advice-btn,
+.quote,
 i {
   background-color: #2E0A53;
   color: white;
   border: none;
+}
+
+.quote,
+.dog {
+  border-radius: 7px;
+}
+
+.dog {
+  border: 2px solid black;
 }
 
 .con-height {
