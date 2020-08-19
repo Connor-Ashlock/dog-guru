@@ -14,13 +14,15 @@
   </head>
   <body>
     <div class="container-fluid con-height con-background">
-      <header class="row align-items-center header-style">
-        <div class="col-2"><a href="index.html"><i class="fas fa-home"></i></a></div>
+      <header class="row align-items-center header-style mb-4">
+        <div id="home-btn" class="col-2"><i class="fas fa-home"></i></div>
         <h1 class="col-8 py-2 d-flex justify-content-center">Dog Guru</h1>
       </header>
       <div class="row justify-content-center pt-200">
-        <button class="advice-btn p-3"><a href="dog-advice.html">Get Advice From A Dog</a></button>
+        <button id="dog-btn" class="advice-btn p-3">Get Advice From A Dog</button>
       </div>
+      <div id="dog-row" class="row justify-content-center"></div>
+      <div id="advice-row" class="row justify-content-center mt-4"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="main.js"></script>
