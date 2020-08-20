@@ -4,14 +4,16 @@ const homeBtn = document.getElementById('home-btn');
 const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
 const dogBtnContainer = document.getElementById('quote-btn-container');
+const dogPageDataKey = 'dogPageData';
 let dogBtn = null;
-let dogPageData = {};
+let dogPageLocal = localStorage.getItem(dogPageDataKey);
+dogPageLocal = JSON.parse(dogPageLocal)
 
-adviceBtn.addEventListener('click', renderDogAdvice);
+adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
-insultBtn.addEventListener('click', renderFoxInsult);
+insultBtn.addEventListener('click', renderFoxInsultOnClick);
 
-function renderDogAdvice() {
+function renderDogAdviceOnClick() {
   $.ajax({
     url: "https://api.adviceslip.com/advice",
     success: data => {
@@ -20,7 +22,8 @@ function renderDogAdvice() {
       quote.textContent = obj.slip.advice;
       quote.classList = 'col-11 p-3 quote text-center';
       quoteParent.appendChild(quote);
-      dogPageData.quoteText = obj.slip.advice;
+      dogPageLocal.quoteText = quote.textContent;
+      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
     },
     error: error => console.log(error)
   })
@@ -33,7 +36,10 @@ function renderDogAdvice() {
       dogImg.alt = 'Dog';
       dogImg.classList = 'col-11 p-0 dog';
       dogParent.appendChild(dogImg);
-      dogPageData.imgUrl = data.url;
+
+      dogPageLocal.url = dogImg.src;
+      dogPageLocal.alt = dogImg.alt;
+      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
     },
     error: error => console.log(error)
   })
@@ -44,20 +50,20 @@ function renderDogAdvice() {
   }
 }
 
-function renderFoxInsult() {
-  $.ajax({
-    // headers: {"Content-Type": "application/json"},
-    url: "https://api.fungenerators.com/taunt/generate?category=pirate-insult&limit=5",
-    success: data => {
-      console.log(data)
-      // const response = JSON.parse(advice.responseText);
-      // const quote = document.createElement('P');
-      // quote.textContent = (response.slip.advice);
-      // quote.classList = 'col-11 p-3 quote text-center';
-      // quoteParent.appendChild(quote);
-    },
-    error: error => console.log(error)
-  })
+function renderFoxInsultOnClick() {
+  // $.ajax({
+  //   // headers: {"Content-Type": "application/json"},
+  //   url: "https://api.fungenerators.com/taunt/generate?category=pirate-insult&limit=5",
+  //   success: data => {
+  //     console.log(data)
+  //     // const response = JSON.parse(advice.responseText);
+  //     // const quote = document.createElement('P');
+  //     // quote.textContent = (response.slip.advice);
+  //     // quote.classList = 'col-11 p-3 quote text-center';
+  //     // quoteParent.appendChild(quote);
+  //   },
+  //   error: error => console.log(error)
+  // })
 
   $.ajax({
     url: "https://randomfox.ca/floof/",
@@ -67,6 +73,10 @@ function renderFoxInsult() {
       dogImg.alt = 'Fox';
       dogImg.classList = 'col-11 p-0 dog';
       dogParent.appendChild(dogImg);
+
+      dogPageLocal.url = dogImg.src;
+      dogPageLocal.alt = dogImg.alt;
+      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
     },
     error: error => console.log(error)
   })
@@ -81,10 +91,10 @@ function newQuoteAndImg () {
   const dogImg = document.querySelector('IMG');
   if (dogImg.alt === 'Dog') {
     RemoveDogAdvice();
-    renderDogAdvice();
+    renderDogAdviceOnClick();
   } else {
     RemoveDogAdvice();
-    renderFoxInsult();
+    renderFoxInsultOnClick();
   }
 }
 
@@ -120,5 +130,26 @@ function goToHomePage() {
   showBtns();
   removeDogIcon();
   dogBtn = null;
-  dogPageData = {};
+  localStorage.setItem(dogPageDataKey, '{}');
 }
+
+function localStorageFunc() {
+  if (dogPageLocal.url !== undefined) {
+    hideBtns();
+    if (dogPageLocal.alt === 'Dog' || dogPageLocal.alt === 'Fox') {
+      const dogImg = document.createElement('IMG');
+      dogImg.src = dogPageLocal.url;
+      dogImg.alt = dogPageLocal.alt;
+      dogImg.classList = 'col-11 p-0 dog';
+      dogParent.appendChild(dogImg);
+
+      const quote = document.createElement('P');
+      quote.textContent = dogPageLocal.quoteText;
+      quote.classList = 'col-11 p-3 quote text-center';
+      quoteParent.appendChild(quote);
+    }
+    renderDogIcon();
+  }
+}
+
+localStorageFunc();
