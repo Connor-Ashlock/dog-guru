@@ -1,2 +1,2 @@
 # api-hackathon
-A hackathon project utlizing the data from four public APIs to create .
+A hackathon project utlizing the data from four public APIs to create an app for dog lovers who are in need of some advice or an insult.
