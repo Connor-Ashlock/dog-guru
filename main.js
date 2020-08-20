@@ -164,4 +164,4 @@ function start() {
   }
 }
 
-start();
+start()
