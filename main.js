@@ -1,17 +1,16 @@
 const adviceBtn = document.getElementById('advice-btn');
-const insultBtn = document.getElementById('insult-btn');
+const jokeBtn = document.getElementById('joke-btn');
 const homeBtn = document.getElementById('home-btn');
 const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
-const dogBtnContainer = document.getElementById('quote-btn-container');
+const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
-let dogBtn = null;
-let dogPageLocal = localStorage.getItem(dogPageDataKey);
-dogPageLocal = JSON.parse(dogPageLocal)
+let refreshBtn = null;
+let dogPageLocal = JSON.parse(localStorage.getItem(dogPageDataKey));
 
 adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
-insultBtn.addEventListener('click', renderFoxInsultOnClick);
+jokeBtn.addEventListener('click', renderFoxJokeOnClick);
 
 function renderDogAdviceOnClick() {
   $.ajax({
@@ -44,26 +43,26 @@ function renderDogAdviceOnClick() {
     error: error => console.log(error)
   })
   hideBtns();
-  if (!dogBtn){
+  if (!refreshBtn){
     renderDogIcon();
-    dogBtn.title = 'New Dog Advice';
+    refreshBtn.title = 'New Dog Advice';
   }
 }
 
-function renderFoxInsultOnClick() {
-  // $.ajax({
-  //   // headers: {"Content-Type": "application/json"},
-  //   url: "https://api.fungenerators.com/taunt/generate?category=pirate-insult&limit=5",
-  //   success: data => {
-  //     console.log(data)
-  //     // const response = JSON.parse(advice.responseText);
-  //     // const quote = document.createElement('P');
-  //     // quote.textContent = (response.slip.advice);
-  //     // quote.classList = 'col-11 p-3 quote text-center';
-  //     // quoteParent.appendChild(quote);
-  //   },
-  //   error: error => console.log(error)
-  // })
+function renderFoxJokeOnClick() {
+  $.ajax({
+    headers: {"Accept": "application/json"},
+    url: "https://icanhazdadjoke.com/",
+    success: data => {
+      const quote = document.createElement('P');
+      quote.textContent = data.joke;
+      quote.classList = 'col-11 p-3 quote text-center';
+      quoteParent.appendChild(quote);
+      dogPageLocal.quoteText = quote.textContent;
+      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+    },
+    error: error => console.log(error)
+  })
 
   $.ajax({
     url: "https://randomfox.ca/floof/",
@@ -81,33 +80,32 @@ function renderFoxInsultOnClick() {
     error: error => console.log(error)
   })
   hideBtns();
-  if (!dogBtn) {
+  if (!refreshBtn) {
     renderDogIcon();
-    dogBtn.title = 'New Fox Insult';
+    refreshBtn.title = 'New Fox Joke';
   }
 }
 
 function newQuoteAndImg () {
   const dogImg = document.querySelector('IMG');
+  RemoveDogAdvice();
   if (dogImg.alt === 'Dog') {
-    RemoveDogAdvice();
     renderDogAdviceOnClick();
   } else {
-    RemoveDogAdvice();
-    renderFoxInsultOnClick();
+    renderFoxJokeOnClick();
   }
 }
 
 function renderDogIcon() {
-  dogBtn = document.createElement('I');
-  dogBtn.id = 'new-quote-btn';
-  dogBtn.className = 'fas fa-dog';
-  dogBtnContainer.appendChild(dogBtn);
-  dogBtn.addEventListener('click', newQuoteAndImg);
+  refreshBtn = document.createElement('I');
+  refreshBtn.id = 'refresh-btn';
+  refreshBtn.className = 'fas fa-sync-alt';
+  refreshBtnContainer.appendChild(refreshBtn);
+  refreshBtn.addEventListener('click', newQuoteAndImg);
 }
 
 function removeDogIcon() {
-  dogBtnContainer.innerHTML = '';
+  refreshBtnContainer.innerHTML = '';
 }
 
 function RemoveDogAdvice() {
@@ -117,19 +115,19 @@ function RemoveDogAdvice() {
 
 function showBtns() {
   adviceBtn.parentElement.classList.remove('d-none');
-  insultBtn.parentElement.classList.remove('d-none');
+  jokeBtn.parentElement.classList.remove('d-none');
 }
 
 function hideBtns() {
   adviceBtn.parentElement.classList.add('d-none');
-  insultBtn.parentElement.classList.add('d-none');
+  jokeBtn.parentElement.classList.add('d-none');
 }
 
 function goToHomePage() {
   RemoveDogAdvice();
   showBtns();
   removeDogIcon();
-  dogBtn = null;
+  refreshBtn = null;
   localStorage.setItem(dogPageDataKey, '{}');
 }
 
