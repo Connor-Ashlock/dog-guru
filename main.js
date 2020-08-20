@@ -44,7 +44,7 @@ function renderDogAdviceOnClick() {
   })
   hideBtns();
   if (!refreshBtn){
-    renderDogIcon();
+    renderRefreshBtn();
     refreshBtn.title = 'New Dog Advice';
   }
 }
@@ -81,12 +81,32 @@ function renderFoxJokeOnClick() {
   })
   hideBtns();
   if (!refreshBtn) {
-    renderDogIcon();
+    renderRefreshBtn();
     refreshBtn.title = 'New Fox Joke';
   }
 }
 
-function newQuoteAndImg () {
+function renderRefreshBtn() {
+  refreshBtn = document.createElement('I');
+  refreshBtn.id = 'refresh-btn';
+  refreshBtn.className = 'fas fa-sync-alt';
+  refreshBtnContainer.appendChild(refreshBtn);
+  refreshBtn.addEventListener('click', debounce(newQuoteAndImg, 500));
+}
+
+function debounce(fn, delay) {
+  let timeout = null;
+  return function() {
+    if (timeout) {
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(() => {
+      fn();
+    }, delay);
+  }
+}
+
+function newQuoteAndImg() {
   const dogImg = document.querySelector('IMG');
   RemoveDogAdvice();
   if (dogImg.alt === 'Dog') {
@@ -96,15 +116,7 @@ function newQuoteAndImg () {
   }
 }
 
-function renderDogIcon() {
-  refreshBtn = document.createElement('I');
-  refreshBtn.id = 'refresh-btn';
-  refreshBtn.className = 'fas fa-sync-alt';
-  refreshBtnContainer.appendChild(refreshBtn);
-  refreshBtn.addEventListener('click', newQuoteAndImg);
-}
-
-function removeDogIcon() {
+function removeRefreshBtn() {
   refreshBtnContainer.innerHTML = '';
 }
 
@@ -126,7 +138,7 @@ function hideBtns() {
 function goToHomePage() {
   RemoveDogAdvice();
   showBtns();
-  removeDogIcon();
+  removeRefreshBtn();
   refreshBtn = null;
   localStorage.setItem(dogPageDataKey, '{}');
 }
@@ -146,7 +158,7 @@ function localStorageFunc() {
       quote.classList = 'col-11 p-3 quote text-center';
       quoteParent.appendChild(quote);
     }
-    renderDogIcon();
+    renderRefreshBtn();
   }
 }
 
