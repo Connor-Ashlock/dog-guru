@@ -21,6 +21,7 @@ function renderDogAdviceOnClick() {
       quote.textContent = obj.slip.advice;
       quote.classList = 'col-11 p-3 quote text-center';
       quoteParent.appendChild(quote);
+
       dogPageLocal.quoteText = quote.textContent;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
     },
@@ -58,6 +59,7 @@ function renderFoxJokeOnClick() {
       quote.textContent = data.joke;
       quote.classList = 'col-11 p-3 quote text-center';
       quoteParent.appendChild(quote);
+
       dogPageLocal.quoteText = quote.textContent;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
     },
@@ -143,7 +145,7 @@ function goToHomePage() {
   localStorage.setItem(dogPageDataKey, '{}');
 }
 
-function localStorageFunc() {
+function start() {
   if (dogPageLocal.url !== undefined) {
     hideBtns();
     if (dogPageLocal.alt === 'Dog' || dogPageLocal.alt === 'Fox') {
@@ -162,4 +164,4 @@ function localStorageFunc() {
   }
 }
 
-localStorageFunc();
+start();
