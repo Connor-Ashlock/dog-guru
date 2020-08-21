@@ -5,6 +5,7 @@ const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
+let isDog = null;
 let refreshBtn = null;
 let dogPageLocal = null;
 
@@ -16,7 +17,17 @@ function renderDogAdviceOnClick() {
   $.ajax({
     url: "https://api.adviceslip.com/advice",
     success: data => {
-      const obj = JSON.parse(data);
+      let obj = JSON.parse(data);
+      while (obj.slip.advice === dogPageLocal.quoteText) {
+        $.ajax({
+          url: "https://api.adviceslip.com/advice",
+          async: false,
+          success: newData => {
+            obj = JSON.parse(newData)
+          },
+          error: newError => console.log(newError)
+        })
+      }
       const quote = document.createElement('P');
       quote.textContent = obj.slip.advice;
       quote.classList = 'col-11 p-3 quote text-center';
@@ -39,6 +50,7 @@ function renderDogAdviceOnClick() {
 
       dogPageLocal.url = dogImg.src;
       dogPageLocal.alt = dogImg.alt;
+      isDog = true;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
     },
     error: error => console.log(error)
@@ -77,6 +89,7 @@ function renderFoxJokeOnClick() {
 
       dogPageLocal.url = dogImg.src;
       dogPageLocal.alt = dogImg.alt;
+      isDog = false;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
     },
     error: error => console.log(error)
@@ -111,7 +124,7 @@ function debounce(fn, delay) {
 function newQuoteAndImg() {
   const dogImg = document.querySelector('IMG');
   RemoveDogAdvice();
-  if (dogImg.alt === 'Dog') {
+  if (isDog) {
     renderDogAdviceOnClick();
   } else {
     renderFoxJokeOnClick();
@@ -128,19 +141,18 @@ function RemoveDogAdvice() {
 }
 
 function showBtns() {
-  adviceBtn.parentElement.classList.remove('d-none');
-  jokeBtn.parentElement.classList.remove('d-none');
+  document.querySelector('.btn-container').classList.remove('d-none');
 }
 
 function hideBtns() {
-  adviceBtn.parentElement.classList.add('d-none');
-  jokeBtn.parentElement.classList.add('d-none');
+  document.querySelector('.btn-container').classList.add('d-none');
 }
 
 function goToHomePage() {
   RemoveDogAdvice();
   showBtns();
   removeRefreshBtn();
+  isDog = null;
   refreshBtn = null;
   localStorage.setItem(dogPageDataKey, '{}');
 }

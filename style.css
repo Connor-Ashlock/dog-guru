@@ -57,3 +57,11 @@ i {
 #joke-btn {
   color: yellow;
 }
+
+.btn-container {
+  height: 70vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
