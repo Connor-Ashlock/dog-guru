@@ -6,7 +6,7 @@ const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
 let refreshBtn = null;
-let dogPageLocal = JSON.parse(localStorage.getItem(dogPageDataKey));
+let dogPageLocal = null;
 
 adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
@@ -146,20 +146,22 @@ function goToHomePage() {
 }
 
 function start() {
+  if (!localStorage.getItem(dogPageDataKey)) {
+    localStorage.setItem(dogPageDataKey, '{}');
+  }
+  dogPageLocal = JSON.parse(localStorage.getItem(dogPageDataKey));
   if (dogPageLocal.url !== undefined) {
     hideBtns();
-    if (dogPageLocal.alt === 'Dog' || dogPageLocal.alt === 'Fox') {
-      const dogImg = document.createElement('IMG');
-      dogImg.src = dogPageLocal.url;
-      dogImg.alt = dogPageLocal.alt;
-      dogImg.classList = 'col-11 p-0 dog';
-      dogParent.appendChild(dogImg);
+    const dogImg = document.createElement('IMG');
+    dogImg.src = dogPageLocal.url;
+    dogImg.alt = dogPageLocal.alt;
+    dogImg.classList = 'col-11 p-0 dog';
+    dogParent.appendChild(dogImg);
 
-      const quote = document.createElement('P');
-      quote.textContent = dogPageLocal.quoteText;
-      quote.classList = 'col-11 p-3 quote text-center';
-      quoteParent.appendChild(quote);
-    }
+    const quote = document.createElement('P');
+    quote.textContent = dogPageLocal.quoteText;
+    quote.classList = 'col-11 p-3 quote text-center';
+    quoteParent.appendChild(quote);
     renderRefreshBtn();
   }
 }
