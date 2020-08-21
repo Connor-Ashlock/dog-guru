@@ -31,6 +31,7 @@ function renderDogAdviceOnClick() {
           error: () => {
             showErrorMessage();
             removeLoadingSpinner();
+            resetLocalStorageObj();
           }
         })
       }
@@ -46,6 +47,7 @@ function renderDogAdviceOnClick() {
     error: () => {
       showErrorMessage();
       removeLoadingSpinner();
+      resetLocalStorageObj();
     }
   })
 
@@ -67,6 +69,7 @@ function renderDogAdviceOnClick() {
     error: () => {
       showErrorMessage();
       removeLoadingSpinner();
+      resetLocalStorageObj();
     }
   })
   hideBtns();
@@ -94,6 +97,7 @@ function renderFoxJokeOnClick() {
     error: () => {
       showErrorMessage();
       removeLoadingSpinner();
+      resetLocalStorageObj();
     }
   })
 
@@ -115,6 +119,7 @@ function renderFoxJokeOnClick() {
     error: () => {
       showErrorMessage();
       removeLoadingSpinner();
+      resetLocalStorageObj();
     }
   })
   hideBtns();
@@ -178,7 +183,7 @@ function goToHomePage() {
   removeErrorMessage();
   isDog = null;
   refreshBtn = null;
-  localStorage.setItem(dogPageDataKey, '{}');
+  resetLocalStorageObj();
 }
 
 function showLoadingSpinner() {
@@ -199,9 +204,13 @@ function removeErrorMessage() {
   }
 }
 
+function resetLocalStorageObj() {
+  localStorage.setItem(dogPageDataKey, '{}')
+}
+
 function start() {
   if (!localStorage.getItem(dogPageDataKey)) {
-    localStorage.setItem(dogPageDataKey, '{}');
+    resetLocalStorageObj();
   }
   dogPageLocal = JSON.parse(localStorage.getItem(dogPageDataKey));
   if (dogPageLocal.url !== undefined) {
