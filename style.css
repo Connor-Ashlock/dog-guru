@@ -50,18 +50,22 @@ i {
   background-size: cover;
 }
 
-.pt-10-percent {
-  padding-top: 10%;
-}
-
 #joke-btn {
   color: yellow;
 }
 
-.btn-container {
+.btn-container,
+.spin-container {
   height: 70vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+}
+
+.spinner-props {
+  height: 5rem;
+  width: 5rem;
+  font-size: 5rem;
+  color: #2E0A53;
 }
