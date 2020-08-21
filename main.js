@@ -6,6 +6,7 @@ const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
 const loadingSpinner = document.querySelector('.spin-container');
+const errorMessage = document.querySelector('.error-container');
 let isDog = null;
 let refreshBtn = null;
 let dogPageLocal = null;
@@ -27,7 +28,10 @@ function renderDogAdviceOnClick() {
           success: newData => {
             obj = JSON.parse(newData)
           },
-          error: newError => console.log(newError)
+          error: () => {
+            showErrorMessage();
+            removeLoadingSpinner();
+          }
         })
       }
       const quote = document.createElement('P');
@@ -39,7 +43,10 @@ function renderDogAdviceOnClick() {
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
       removeLoadingSpinner();
     },
-    error: error => console.log(error)
+    error: () => {
+      showErrorMessage();
+      removeLoadingSpinner();
+    }
   })
 
   $.ajax({
@@ -57,7 +64,10 @@ function renderDogAdviceOnClick() {
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
       removeLoadingSpinner();
     },
-    error: error => console.log(error)
+    error: () => {
+      showErrorMessage();
+      removeLoadingSpinner();
+    }
   })
   hideBtns();
   if (!refreshBtn){
@@ -81,7 +91,10 @@ function renderFoxJokeOnClick() {
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
       removeLoadingSpinner();
     },
-    error: error => console.log(error)
+    error: () => {
+      showErrorMessage();
+      removeLoadingSpinner();
+    }
   })
 
   $.ajax({
@@ -99,7 +112,10 @@ function renderFoxJokeOnClick() {
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
       removeLoadingSpinner();
     },
-    error: error => console.log(error)
+    error: () => {
+      showErrorMessage();
+      removeLoadingSpinner();
+    }
   })
   hideBtns();
   if (!refreshBtn) {
@@ -159,6 +175,7 @@ function goToHomePage() {
   RemoveDogAdvice();
   showBtns();
   removeRefreshBtn();
+  removeErrorMessage();
   isDog = null;
   refreshBtn = null;
   localStorage.setItem(dogPageDataKey, '{}');
@@ -170,6 +187,16 @@ function showLoadingSpinner() {
 
 function removeLoadingSpinner() {
   loadingSpinner.classList.add('d-none');
+}
+
+function showErrorMessage() {
+  errorMessage.classList.remove('d-none');
+}
+
+function removeErrorMessage() {
+  if (!errorMessage.classList.contains('d-none')) {
+    errorMessage.classList.add('d-none');
+  }
 }
 
 function start() {
