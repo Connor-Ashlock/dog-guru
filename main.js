@@ -5,6 +5,7 @@ const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
+const loadingSpinner = document.querySelector('.spin-container');
 let isDog = null;
 let refreshBtn = null;
 let dogPageLocal = null;
@@ -14,6 +15,7 @@ homeBtn.addEventListener('click', goToHomePage);
 jokeBtn.addEventListener('click', renderFoxJokeOnClick);
 
 function renderDogAdviceOnClick() {
+  showLoadingSpinner();
   $.ajax({
     url: "https://api.adviceslip.com/advice",
     success: data => {
@@ -35,6 +37,7 @@ function renderDogAdviceOnClick() {
 
       dogPageLocal.quoteText = quote.textContent;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+      removeLoadingSpinner();
     },
     error: error => console.log(error)
   })
@@ -52,6 +55,7 @@ function renderDogAdviceOnClick() {
       dogPageLocal.alt = dogImg.alt;
       isDog = true;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+      removeLoadingSpinner();
     },
     error: error => console.log(error)
   })
@@ -63,6 +67,7 @@ function renderDogAdviceOnClick() {
 }
 
 function renderFoxJokeOnClick() {
+  showLoadingSpinner();
   $.ajax({
     headers: {"Accept": "application/json"},
     url: "https://icanhazdadjoke.com/",
@@ -74,6 +79,7 @@ function renderFoxJokeOnClick() {
 
       dogPageLocal.quoteText = quote.textContent;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+      removeLoadingSpinner();
     },
     error: error => console.log(error)
   })
@@ -91,6 +97,7 @@ function renderFoxJokeOnClick() {
       dogPageLocal.alt = dogImg.alt;
       isDog = false;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+      removeLoadingSpinner();
     },
     error: error => console.log(error)
   })
@@ -155,6 +162,14 @@ function goToHomePage() {
   isDog = null;
   refreshBtn = null;
   localStorage.setItem(dogPageDataKey, '{}');
+}
+
+function showLoadingSpinner() {
+  loadingSpinner.classList.remove('d-none');
+}
+
+function removeLoadingSpinner() {
+  loadingSpinner.classList.add('d-none');
 }
 
 function start() {
