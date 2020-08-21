@@ -20,6 +20,7 @@ i {
 .header-style,
 .btn-props,
 .quote,
+.error-msg,
 i {
   background-color: #2E0A53;
   color: whitesmoke;
@@ -27,7 +28,8 @@ i {
 }
 
 .quote,
-.dog {
+.dog,
+.error-msg {
   border-radius: 7px;
 }
 
@@ -55,7 +57,8 @@ i {
 }
 
 .btn-container,
-.spin-container {
+.spin-container,
+.error-container {
   height: 70vh;
   display: flex;
   flex-wrap: wrap;
@@ -68,4 +71,8 @@ i {
   width: 5rem;
   font-size: 5rem;
   color: #2E0A53;
+}
+
+.error-msg {
+  font-size: 1.5rem;
 }
