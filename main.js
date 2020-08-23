@@ -7,7 +7,6 @@ const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
 const loadingSpinner = document.querySelector('.spin-container');
 const errorMessage = document.querySelector('.error-container');
-let isDog = null;
 let refreshBtn = null;
 let dogPageLocal = null;
 
@@ -37,7 +36,7 @@ function renderDogAdviceOnClick() {
       }
       const quote = document.createElement('P');
       quote.textContent = obj.slip.advice;
-      quote.classList = 'col-11 p-3 quote text-center';
+      quote.classList = 'col-11 p-3 quote text-center col-60';
       quoteParent.appendChild(quote);
 
       dogPageLocal.quoteText = quote.textContent;
@@ -57,12 +56,12 @@ function renderDogAdviceOnClick() {
       const dogImg = document.createElement('IMG');
       dogImg.src = data.url;
       dogImg.alt = 'Dog';
-      dogImg.classList = 'col-11 p-0 dog';
+      dogImg.classList = 'col-11 p-0 dog col-60';
       dogParent.appendChild(dogImg);
 
       dogPageLocal.url = dogImg.src;
       dogPageLocal.alt = dogImg.alt;
-      isDog = true;
+      dogPageLocal.isDog = true;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
       removeLoadingSpinner();
     },
@@ -87,7 +86,7 @@ function renderFoxJokeOnClick() {
     success: data => {
       const quote = document.createElement('P');
       quote.textContent = data.joke;
-      quote.classList = 'col-11 p-3 quote text-center';
+      quote.classList = 'col-11 p-3 quote text-center col-60';
       quoteParent.appendChild(quote);
 
       dogPageLocal.quoteText = quote.textContent;
@@ -107,12 +106,12 @@ function renderFoxJokeOnClick() {
       const dogImg = document.createElement('IMG');
       dogImg.src = data.image;
       dogImg.alt = 'Fox';
-      dogImg.classList = 'col-11 p-0 dog';
+      dogImg.classList = 'col-11 p-0 dog col-60';
       dogParent.appendChild(dogImg);
 
       dogPageLocal.url = dogImg.src;
       dogPageLocal.alt = dogImg.alt;
-      isDog = false;
+      dogPageLocal.isDog = false;
       localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
       removeLoadingSpinner();
     },
@@ -152,7 +151,7 @@ function debounce(fn, delay) {
 function newQuoteAndImg() {
   const dogImg = document.querySelector('IMG');
   RemoveDogAdvice();
-  if (isDog) {
+  if (dogPageLocal.isDog) {
     renderDogAdviceOnClick();
   } else {
     renderFoxJokeOnClick();
@@ -181,7 +180,6 @@ function goToHomePage() {
   showBtns();
   removeRefreshBtn();
   removeErrorMessage();
-  isDog = null;
   refreshBtn = null;
   resetLocalStorageObj();
 }
@@ -218,12 +216,12 @@ function start() {
     const dogImg = document.createElement('IMG');
     dogImg.src = dogPageLocal.url;
     dogImg.alt = dogPageLocal.alt;
-    dogImg.classList = 'col-11 p-0 dog';
+    dogImg.classList = 'col-11 p-0 dog col-60';
     dogParent.appendChild(dogImg);
 
     const quote = document.createElement('P');
     quote.textContent = dogPageLocal.quoteText;
-    quote.classList = 'col-11 p-3 quote text-center';
+    quote.classList = 'col-11 p-3 quote text-center col-60';
     quoteParent.appendChild(quote);
     renderRefreshBtn();
   }
