@@ -46,6 +46,7 @@ function renderDogImage() {
       removeLoadingSpinner();
     },
     error: () => {
+      removeImageAndQuote();
       showErrorMessage();
       removeLoadingSpinner();
       resetLocalStorageObj();
@@ -54,7 +55,7 @@ function renderDogImage() {
 }
 
 function renderAdviceQuote() {
-  removeAdvice();
+  removeQuote();
   showQuoteSpinner();
   $.ajax({
     url: "https://api.adviceslip.com/advice",
@@ -80,6 +81,7 @@ function renderAdviceQuote() {
       }
     },
     error: () => {
+      removeImageAndQuote();
       showErrorMessage();
       removeLoadingSpinner();
       removeQuoteSpinner();
@@ -107,11 +109,11 @@ function renderFoxJokeOnClick() {
 
         dogPageLocal.quoteText = quote.textContent;
         localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
-        removeLoadingSpinner();
       }
       removeLoadingSpinner();
     },
     error: () => {
+      removeImageAndQuote();
       showErrorMessage();
       removeLoadingSpinner();
       resetLocalStorageObj();
@@ -132,11 +134,11 @@ function renderFoxJokeOnClick() {
         dogPageLocal.alt = dogImg.alt;
         dogPageLocal.isDog = false;
         localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
-        removeLoadingSpinner();
       }
       removeLoadingSpinner();
     },
     error: () => {
+      removeImageAndQuote();
       showErrorMessage();
       removeLoadingSpinner();
       resetLocalStorageObj();
@@ -166,7 +168,7 @@ function debounce(fn, delay) {
 
 function renderQuoteAndImg() {
   const dogImg = document.querySelector('IMG');
-  removeDogAdvice();
+  removeImageAndQuote();
   removeErrorMessage();
   if (dogPageLocal.isDog) {
     renderDogAdviceOnClick();
@@ -179,12 +181,12 @@ function removeRefreshBtn() {
   refreshBtnContainer.innerHTML = '';
 }
 
-function removeDogAdvice() {
+function removeImageAndQuote() {
   dogParent.innerHTML = '';
   quoteParent.innerHTML = '';
 }
 
-function removeAdvice() {
+function removeQuote() {
   quoteParent.innerHTML = '';
 }
 
@@ -205,7 +207,7 @@ function isOnHomePage() {
 }
 
 function goToHomePage() {
-  removeDogAdvice();
+  removeImageAndQuote();
   showBtns();
   removeRefreshBtn();
   removeErrorMessage();

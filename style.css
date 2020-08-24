@@ -72,6 +72,6 @@ i {
 
 @media (min-width: 769px) {
   .col-70 {
-    max-width: 70%;
+    max-width: 40%;
   }
 }
