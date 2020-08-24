@@ -35,7 +35,7 @@ function renderDogImage() {
         const dogImg = document.createElement('IMG');
         dogImg.src = data.url;
         dogImg.alt = 'Dog';
-        dogImg.classList = 'col-11 p-0 dog col-70';
+        dogImg.classList = 'col-11 p-0 dog col-40';
         dogParent.appendChild(dogImg);
 
         dogPageLocal.url = dogImg.src;
@@ -67,7 +67,7 @@ function renderAdviceQuote() {
         } else {
           const quote = document.createElement('P');
           quote.textContent = data.slip.advice;
-          quote.classList = 'col-11 p-3 quote text-center col-70';
+          quote.classList = 'col-11 p-3 quote text-center col-40';
           quoteParent.appendChild(quote);
 
           dogPageLocal.quoteText = quote.textContent;
@@ -104,7 +104,7 @@ function renderFoxJokeOnClick() {
       if (!isOnHomePage()) {
         const quote = document.createElement('P');
         quote.textContent = data.joke;
-        quote.classList = 'col-11 p-3 quote text-center col-70';
+        quote.classList = 'col-11 p-3 quote text-center col-40';
         quoteParent.appendChild(quote);
 
         dogPageLocal.quoteText = quote.textContent;
@@ -127,7 +127,7 @@ function renderFoxJokeOnClick() {
         const dogImg = document.createElement('IMG');
         dogImg.src = data.image;
         dogImg.alt = 'Fox';
-        dogImg.classList = 'col-11 p-0 dog col-70';
+        dogImg.classList = 'col-11 p-0 dog col-40';
         dogParent.appendChild(dogImg);
 
         dogPageLocal.url = dogImg.src;
@@ -255,12 +255,12 @@ function start() {
     const dogImg = document.createElement('IMG');
     dogImg.src = dogPageLocal.url;
     dogImg.alt = dogPageLocal.alt;
-    dogImg.classList = 'col-11 p-0 dog col-70';
+    dogImg.classList = 'col-11 p-0 dog col-40';
     dogParent.appendChild(dogImg);
 
     const quote = document.createElement('P');
     quote.textContent = dogPageLocal.quoteText;
-    quote.classList = 'col-11 p-3 quote text-center col-70';
+    quote.classList = 'col-11 p-3 quote text-center col-40';
     quoteParent.appendChild(quote);
     renderRefreshBtn();
   }
