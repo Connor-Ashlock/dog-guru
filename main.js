@@ -7,6 +7,8 @@ const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
 const loadingSpinner = document.querySelector('.spin-container');
 const errorMessage = document.querySelector('.error-container');
+const btnContainer = document.querySelector('.btn-container');
+const quoteSpinner = document.querySelector('.quote-spinner');
 let refreshBtn = null;
 let dogPageLocal = null;
 
@@ -16,81 +18,97 @@ jokeBtn.addEventListener('click', renderFoxJokeOnClick);
 
 function renderDogAdviceOnClick() {
   showLoadingSpinner();
-  $.ajax({
-    url: "https://api.adviceslip.com/advice",
-    success: data => {
-      let obj = JSON.parse(data);
-      while (obj.slip.advice === dogPageLocal.quoteText) {
-        $.ajax({
-          url: "https://api.adviceslip.com/advice",
-          async: false,
-          success: newData => {
-            obj = JSON.parse(newData)
-          },
-          error: () => {
-            showErrorMessage();
-            removeLoadingSpinner();
-            resetLocalStorageObj();
-          }
-        })
-      }
-      const quote = document.createElement('P');
-      quote.textContent = obj.slip.advice;
-      quote.classList = 'col-11 p-3 quote text-center col-60';
-      quoteParent.appendChild(quote);
-
-      dogPageLocal.quoteText = quote.textContent;
-      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
-      removeLoadingSpinner();
-    },
-    error: () => {
-      showErrorMessage();
-      removeLoadingSpinner();
-      resetLocalStorageObj();
-    }
-  })
-
-  $.ajax({
-    url: "https://random.dog/woof.json?filter=mp4,webm",
-    success: data => {
-      const dogImg = document.createElement('IMG');
-      dogImg.src = data.url;
-      dogImg.alt = 'Dog';
-      dogImg.classList = 'col-11 p-0 dog col-60';
-      dogParent.appendChild(dogImg);
-
-      dogPageLocal.url = dogImg.src;
-      dogPageLocal.alt = dogImg.alt;
-      dogPageLocal.isDog = true;
-      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
-      removeLoadingSpinner();
-    },
-    error: () => {
-      showErrorMessage();
-      removeLoadingSpinner();
-      resetLocalStorageObj();
-    }
-  })
   hideBtns();
-  if (!refreshBtn){
+  if (!refreshBtn) {
     renderRefreshBtn();
     refreshBtn.title = 'New Dog Advice';
   }
+  renderDogImage();
+  renderAdviceQuote();
+}
+
+function renderDogImage() {
+  $.ajax({
+    url: "https://random.dog/woof.json?filter=mp4,webm",
+    success: data => {
+      if (!isOnHomePage()) {
+        const dogImg = document.createElement('IMG');
+        dogImg.src = data.url;
+        dogImg.alt = 'Dog';
+        dogImg.classList = 'col-11 p-0 dog col-70';
+        dogParent.appendChild(dogImg);
+
+        dogPageLocal.url = dogImg.src;
+        dogPageLocal.alt = dogImg.alt;
+        dogPageLocal.isDog = true;
+        localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+      }
+      removeLoadingSpinner();
+    },
+    error: () => {
+      showErrorMessage();
+      removeLoadingSpinner();
+      resetLocalStorageObj();
+    }
+  })
+}
+
+function renderAdviceQuote() {
+  removeAdvice();
+  showQuoteSpinner();
+  $.ajax({
+    url: "https://api.adviceslip.com/advice",
+    dataType: 'json',
+    success: data => {
+      if (!isOnHomePage()) {
+        if (data.slip.advice === dogPageLocal.quoteText) {
+          debounce(renderAdviceQuote(), 2000);
+        } else {
+          const quote = document.createElement('P');
+          quote.textContent = data.slip.advice;
+          quote.classList = 'col-11 p-3 quote text-center col-70';
+          quoteParent.appendChild(quote);
+
+          dogPageLocal.quoteText = quote.textContent;
+          localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+          removeLoadingSpinner();
+          removeQuoteSpinner();
+        }
+      } else {
+        removeLoadingSpinner();
+        removeQuoteSpinner();
+      }
+    },
+    error: () => {
+      showErrorMessage();
+      removeLoadingSpinner();
+      removeQuoteSpinner();
+      resetLocalStorageObj();
+    }
+  })
 }
 
 function renderFoxJokeOnClick() {
   showLoadingSpinner();
+  hideBtns();
+  if (!refreshBtn) {
+    renderRefreshBtn();
+    refreshBtn.title = 'New Fox Joke';
+  }
   $.ajax({
     headers: {"Accept": "application/json"},
     url: "https://icanhazdadjoke.com/",
     success: data => {
-      const quote = document.createElement('P');
-      quote.textContent = data.joke;
-      quote.classList = 'col-11 p-3 quote text-center col-60';
-      quoteParent.appendChild(quote);
+      if (!isOnHomePage()) {
+        const quote = document.createElement('P');
+        quote.textContent = data.joke;
+        quote.classList = 'col-11 p-3 quote text-center col-70';
+        quoteParent.appendChild(quote);
 
-      dogPageLocal.quoteText = quote.textContent;
-      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+        dogPageLocal.quoteText = quote.textContent;
+        localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+        removeLoadingSpinner();
+      }
       removeLoadingSpinner();
     },
     error: () => {
@@ -103,16 +121,19 @@ function renderFoxJokeOnClick() {
   $.ajax({
     url: "https://randomfox.ca/floof/",
     success: data => {
-      const dogImg = document.createElement('IMG');
-      dogImg.src = data.image;
-      dogImg.alt = 'Fox';
-      dogImg.classList = 'col-11 p-0 dog col-60';
-      dogParent.appendChild(dogImg);
+      if (!isOnHomePage()) {
+        const dogImg = document.createElement('IMG');
+        dogImg.src = data.image;
+        dogImg.alt = 'Fox';
+        dogImg.classList = 'col-11 p-0 dog col-70';
+        dogParent.appendChild(dogImg);
 
-      dogPageLocal.url = dogImg.src;
-      dogPageLocal.alt = dogImg.alt;
-      dogPageLocal.isDog = false;
-      localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+        dogPageLocal.url = dogImg.src;
+        dogPageLocal.alt = dogImg.alt;
+        dogPageLocal.isDog = false;
+        localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+        removeLoadingSpinner();
+      }
       removeLoadingSpinner();
     },
     error: () => {
@@ -121,11 +142,6 @@ function renderFoxJokeOnClick() {
       resetLocalStorageObj();
     }
   })
-  hideBtns();
-  if (!refreshBtn) {
-    renderRefreshBtn();
-    refreshBtn.title = 'New Fox Joke';
-  }
 }
 
 function renderRefreshBtn() {
@@ -150,7 +166,7 @@ function debounce(fn, delay) {
 
 function newQuoteAndImg() {
   const dogImg = document.querySelector('IMG');
-  RemoveDogAdvice();
+  removeDogAdvice();
   if (dogPageLocal.isDog) {
     renderDogAdviceOnClick();
   } else {
@@ -162,21 +178,33 @@ function removeRefreshBtn() {
   refreshBtnContainer.innerHTML = '';
 }
 
-function RemoveDogAdvice() {
+function removeDogAdvice() {
   dogParent.innerHTML = '';
   quoteParent.innerHTML = '';
 }
 
+function removeAdvice() {
+  quoteParent.innerHTML = '';
+}
+
 function showBtns() {
-  document.querySelector('.btn-container').classList.remove('d-none');
+  btnContainer.classList.remove('d-none');
 }
 
 function hideBtns() {
-  document.querySelector('.btn-container').classList.add('d-none');
+  btnContainer.classList.add('d-none');
+}
+
+function isOnHomePage() {
+  if (btnContainer.classList.contains('d-none')) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 function goToHomePage() {
-  RemoveDogAdvice();
+  removeDogAdvice();
   showBtns();
   removeRefreshBtn();
   removeErrorMessage();
@@ -190,6 +218,18 @@ function showLoadingSpinner() {
 
 function removeLoadingSpinner() {
   loadingSpinner.classList.add('d-none');
+  console.log('hide quote spin')
+}
+
+function showQuoteSpinner() {
+  console.log('show quote spin')
+  quoteSpinner.classList.remove('d-none');
+  console.log(quoteSpinner)
+}
+
+function removeQuoteSpinner() {
+  quoteSpinner.classList.add('d-none');
+  console.log(quoteSpinner)
 }
 
 function showErrorMessage() {
@@ -216,12 +256,12 @@ function start() {
     const dogImg = document.createElement('IMG');
     dogImg.src = dogPageLocal.url;
     dogImg.alt = dogPageLocal.alt;
-    dogImg.classList = 'col-11 p-0 dog col-60';
+    dogImg.classList = 'col-11 p-0 dog col-70';
     dogParent.appendChild(dogImg);
 
     const quote = document.createElement('P');
     quote.textContent = dogPageLocal.quoteText;
-    quote.classList = 'col-11 p-3 quote text-center col-60';
+    quote.classList = 'col-11 p-3 quote text-center col-70';
     quoteParent.appendChild(quote);
     renderRefreshBtn();
   }
