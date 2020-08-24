@@ -17,4 +17,6 @@ https://connor-ashlock.github.io/api-hackathon/
 - Users can refresh the page to get a new image and quote.
 
 ## Preview
-
+<p>
+  <img src="images/dog-guru.gif" alt="dog-guru">
+</p>
