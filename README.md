@@ -9,7 +9,7 @@ A hackathon project utlizing the data from four public APIs to create an app for
 - CSS3
 
 ## Live Demo
-https://connor-ashlock.github.io/api-hackathon/
+https://connor-ashlock.github.io/dog-guru/
 
 ## Features
 - Users can generate dog images along with helpful advice.
