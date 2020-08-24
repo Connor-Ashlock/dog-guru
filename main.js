@@ -218,18 +218,14 @@ function showLoadingSpinner() {
 
 function removeLoadingSpinner() {
   loadingSpinner.classList.add('d-none');
-  console.log('hide quote spin')
 }
 
 function showQuoteSpinner() {
-  console.log('show quote spin')
   quoteSpinner.classList.remove('d-none');
-  console.log(quoteSpinner)
 }
 
 function removeQuoteSpinner() {
   quoteSpinner.classList.add('d-none');
-  console.log(quoteSpinner)
 }
 
 function showErrorMessage() {
