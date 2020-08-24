@@ -18,5 +18,5 @@ https://connor-ashlock.github.io/api-hackathon/
 
 ## Preview
 <p>
-  <img src="images/dog-guru.gif" alt="dog-guru">
+  <img src="images/dog-guru-v2.gif" alt="dog-guru">
 </p>
