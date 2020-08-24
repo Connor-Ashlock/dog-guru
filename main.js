@@ -149,7 +149,7 @@ function renderRefreshBtn() {
   refreshBtn.id = 'refresh-btn';
   refreshBtn.className = 'fas fa-sync-alt';
   refreshBtnContainer.appendChild(refreshBtn);
-  refreshBtn.addEventListener('click', debounce(newQuoteAndImg, 500));
+  refreshBtn.addEventListener('click', debounce(renderQuoteAndImg, 500));
 }
 
 function debounce(fn, delay) {
@@ -164,9 +164,10 @@ function debounce(fn, delay) {
   }
 }
 
-function newQuoteAndImg() {
+function renderQuoteAndImg() {
   const dogImg = document.querySelector('IMG');
   removeDogAdvice();
+  removeErrorMessage();
   if (dogPageLocal.isDog) {
     renderDogAdviceOnClick();
   } else {
