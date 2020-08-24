@@ -4,6 +4,7 @@ A hackathon project utlizing the data from four public APIs to create an app for
 ## Technologies Used
 - HTML5
 - JavaScript
+- JQuery
 - Bootstap 4
 - CSS3
 
