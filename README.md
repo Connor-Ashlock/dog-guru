@@ -1,5 +1,5 @@
 # dog-guru
-A hackathon project utlizing the data from four public APIs to create an app for dog lovers who are in need of some advice or a joke.
+A hackathon project utilizing the data from four public APIs to create an app for dog lovers who are in need of some advice or a joke.
 
 ## Technologies Used
 - HTML5
@@ -7,6 +7,7 @@ A hackathon project utlizing the data from four public APIs to create an app for
 - JQuery
 - Bootstap 4
 - CSS3
+- JSON
 
 ## Live Demo
 https://connor-ashlock.github.io/dog-guru/
