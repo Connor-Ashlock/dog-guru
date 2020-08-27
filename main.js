@@ -1,6 +1,7 @@
 const adviceBtn = document.getElementById('advice-btn');
 const jokeBtn = document.getElementById('joke-btn');
 const homeBtn = document.getElementById('home-btn');
+const saveBtn = document.getElementById('save-btn');
 const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
@@ -65,10 +66,9 @@ function renderAdviceQuote() {
         if (data.slip.advice === dogPageLocal.quoteText) {
           debounce(renderAdviceQuote(), 2000);
         } else {
-          const quote = document.createElement('P');
+          renderQuoteContainer();
+          const quote = document.querySelector('P');
           quote.textContent = data.slip.advice;
-          quote.classList = 'col-11 p-3 quote text-center col-40';
-          quoteParent.appendChild(quote);
 
           dogPageLocal.quoteText = quote.textContent;
           localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
@@ -102,10 +102,9 @@ function renderFoxJokeOnClick() {
     url: "https://icanhazdadjoke.com/",
     success: data => {
       if (!isOnHomePage()) {
-        const quote = document.createElement('P');
+        renderQuoteContainer();
+        const quote = document.querySelector('P');
         quote.textContent = data.joke;
-        quote.classList = 'col-11 p-3 quote text-center col-40';
-        quoteParent.appendChild(quote);
 
         dogPageLocal.quoteText = quote.textContent;
         localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
@@ -144,6 +143,17 @@ function renderFoxJokeOnClick() {
       resetLocalStorageObj();
     }
   })
+}
+
+function renderQuoteContainer() {
+  const quoteContainer = document.createElement('DIV');
+  const quote = document.createElement('P');
+  const bookmark = document.createElement('I');
+  quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex align-items-center justify-content-center';
+  quote.classList = 'col-10 mb-0';
+  bookmark.classList = 'col-2 fas fa-bookmark';
+  quoteContainer.append(quote, bookmark)
+  quoteParent.appendChild(quoteContainer);
 }
 
 function renderRefreshBtn() {
@@ -258,10 +268,10 @@ function start() {
     dogImg.classList = 'col-11 p-0 dog col-40';
     dogParent.appendChild(dogImg);
 
-    const quote = document.createElement('P');
+    renderQuoteContainer();
+    const quote = document.querySelector('P');
     quote.textContent = dogPageLocal.quoteText;
-    quote.classList = 'col-11 p-3 quote text-center col-40';
-    quoteParent.appendChild(quote);
+
     renderRefreshBtn();
   }
 }
