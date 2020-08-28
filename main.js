@@ -5,6 +5,7 @@ const saveBtn = document.getElementById('save-btn');
 const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
+const saveContainer = document.getElementById('save-container');
 const dogPageDataKey = 'dogPageData';
 const savedKey = 'saved';
 const nextIdKey = 'nextId';
@@ -16,10 +17,12 @@ let dogPageLocal = null;
 let refreshBtn = null;
 let savedItemsLocal = null;
 let nextIdLocal = null;
+let isOnSavedItemsPage = null;
 
 adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
 jokeBtn.addEventListener('click', renderFoxJokeOnClick);
+saveBtn.addEventListener('click', renderSavedItemsOnClick);
 
 function renderDogAdviceOnClick() {
   showLoadingSpinner();
@@ -158,8 +161,13 @@ function renderQuoteContainer() {
   bookmark.classList = 'col-2 fas fa-bookmark';
   quoteContainer.append(quote, bookmark)
   quoteParent.appendChild(quoteContainer);
-  bookmark.addEventListener('click', saveOnClick)
 
+  if (!isOnSavedItemsPage) {
+    bookmark.addEventListener('click', saveOnClick)
+  } else {
+    // add bookmark.addEventListener('click', unsaveOnClick)
+    return;
+  }
   function saveOnClick() {
     bookmark.classList.add('red');
     saveItemToLocalStorage();
@@ -170,13 +178,36 @@ function renderQuoteContainer() {
 function saveItemToLocalStorage() {
   savedItemsLocal.items[nextIdLocal++] = {
     url: dogPageLocal.url,
-    quote: dogPageLocal.quoteText
+    quoteText: dogPageLocal.quoteText,
+    alt: dogPageLocal.alt
   }
   localStorage.setItem(savedKey, JSON.stringify(savedItemsLocal));
   localStorage.setItem(nextIdKey, JSON.stringify(nextIdLocal));
 }
 
-function unsaveItemInLoval() {
+function renderSavedItemsOnClick() {
+  hideBtns();
+  showSaveContainer();
+  for (let i = 1; i < Object.keys(savedItemsLocal.items).length + 1; i++) {
+    const dogImg = document.createElement('IMG');
+    dogImg.src = savedItemsLocal.items[i].url;
+    dogImg.alt = savedItemsLocal.items[i].alt;
+    dogImg.classList = 'col-11 p-0 dog col-40 mb-1';
+
+    const quoteContainer = document.createElement('DIV');
+    const quote = document.createElement('P');
+    const bookmark = document.createElement('I');
+    quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex mb-5 align-items-center justify-content-center';
+    quote.classList = 'col-10 mb-0';
+    bookmark.classList = 'col-2 fas fa-bookmark';
+    quoteContainer.append(quote, bookmark)
+    quote.textContent = savedItemsLocal.items[i].quoteText;
+
+    saveContainer.append(dogImg, quoteContainer);
+  }
+}
+
+function unsaveItemInLocal() {
   // removes saved dog image and quote from savedItems local storage obj
 
 }
@@ -243,11 +274,23 @@ function isOnHomePage() {
 
 function goToHomePage() {
   removeImageAndQuote();
+  removeSaveContainer();
   showBtns();
   removeRefreshBtn();
   removeErrorMessage();
   refreshBtn = null;
   resetLocalStorageObj();
+}
+
+function showSaveContainer() {
+  saveContainer.classList.remove('d-none');
+}
+
+function removeSaveContainer() {
+  if (!saveContainer.classList.contains('d-none')) {
+    saveContainer.classList.add('d-none');
+    saveContainer.innerHTML = '';
+  }
 }
 
 function showLoadingSpinner() {
@@ -284,7 +327,6 @@ function start() {
   if (!localStorage.getItem(dogPageDataKey)) {
     resetLocalStorageObj();
     const saved = new Saved();
-    console.log(saved);
     localStorage.setItem(savedKey, JSON.stringify(saved));
     localStorage.setItem(nextIdKey, 1)
   }
