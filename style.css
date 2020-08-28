@@ -70,6 +70,10 @@ i {
   font-size: 1.5rem;
 }
 
+.red {
+  color: rgb(165, 3, 3);
+}
+
 @media (min-width: 769px) {
   .col-40 {
     max-width: 40%;

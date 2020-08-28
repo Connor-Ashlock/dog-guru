@@ -6,12 +6,16 @@ const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const dogPageDataKey = 'dogPageData';
+const savedKey = 'saved';
+const nextIdKey = 'nextId';
 const loadingSpinner = document.querySelector('.spin-container');
 const errorMessage = document.querySelector('.error-container');
 const btnContainer = document.querySelector('.btn-container');
 const quoteSpinner = document.querySelector('.quote-spinner');
-let refreshBtn = null;
 let dogPageLocal = null;
+let refreshBtn = null;
+let savedItemsLocal = null;
+let nextIdLocal = null;
 
 adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
@@ -154,6 +158,27 @@ function renderQuoteContainer() {
   bookmark.classList = 'col-2 fas fa-bookmark';
   quoteContainer.append(quote, bookmark)
   quoteParent.appendChild(quoteContainer);
+  bookmark.addEventListener('click', saveOnClick)
+
+  function saveOnClick() {
+    bookmark.classList.add('red');
+    saveItemToLocalStorage();
+    bookmark.removeEventListener('click', saveOnClick);
+  }
+}
+
+function saveItemToLocalStorage() {
+  savedItemsLocal.items[nextIdLocal++] = {
+    url: dogPageLocal.url,
+    quote: dogPageLocal.quoteText
+  }
+  localStorage.setItem(savedKey, JSON.stringify(savedItemsLocal));
+  localStorage.setItem(nextIdKey, JSON.stringify(nextIdLocal));
+}
+
+function unsaveItemInLoval() {
+  // removes saved dog image and quote from savedItems local storage obj
+
 }
 
 function renderRefreshBtn() {
@@ -258,8 +283,14 @@ function resetLocalStorageObj() {
 function start() {
   if (!localStorage.getItem(dogPageDataKey)) {
     resetLocalStorageObj();
+    const saved = new Saved();
+    console.log(saved);
+    localStorage.setItem(savedKey, JSON.stringify(saved));
+    localStorage.setItem(nextIdKey, 1)
   }
   dogPageLocal = JSON.parse(localStorage.getItem(dogPageDataKey));
+  savedItemsLocal = JSON.parse(localStorage.getItem(savedKey));
+  nextIdLocal = JSON.parse(localStorage.getItem('nextId'));
   if (dogPageLocal.url !== undefined) {
     hideBtns();
     const dogImg = document.createElement('IMG');
