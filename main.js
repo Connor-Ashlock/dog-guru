@@ -199,7 +199,7 @@ function renderSavedItemsOnClick() {
     const bookmark = document.createElement('I');
     quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex mb-5 align-items-center justify-content-center';
     quote.classList = 'col-10 mb-0';
-    bookmark.classList = 'col-2 fas fa-bookmark';
+    bookmark.classList = 'col-2 fas fa-bookmark red';
     quoteContainer.append(quote, bookmark)
     quote.textContent = savedItemsLocal.items[i].quoteText;
 
