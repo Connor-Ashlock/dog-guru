@@ -18,6 +18,7 @@ let refreshBtn = null;
 let savedItemsLocal = null;
 let nextIdLocal = null;
 let isOnSavedItemsPage = null;
+let isOnSavedItemsPageKey = 'isOnSavedItemsPage';
 
 adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
@@ -188,22 +189,38 @@ function saveItemToLocalStorage() {
 function renderSavedItemsOnClick() {
   hideBtns();
   showSaveContainer();
-  for (let i = 1; i < Object.keys(savedItemsLocal.items).length + 1; i++) {
-    const dogImg = document.createElement('IMG');
-    dogImg.src = savedItemsLocal.items[i].url;
-    dogImg.alt = savedItemsLocal.items[i].alt;
-    dogImg.classList = 'col-11 p-0 dog col-40 mb-1';
+  localStorage.setItem(isOnSavedItemsPageKey, true);
+  isOnSavedItemsPage = JSON.parse(localStorage.getItem(isOnSavedItemsPageKey));
+  if (Object.keys(savedItemsLocal.items).length === 0) {
+    const noSavedItems = document.createElement('P');
+    noSavedItems.textContent = 'You have nothing saved';
+    noSavedItems.classList = 'col-11 p-3 quote col-40 text-center';
+    saveContainer.appendChild(noSavedItems);
+  } else {
+    for (let i = 1; i < Object.keys(savedItemsLocal.items).length + 1; i++) {
+      const imageRow = document.createElement('DIV');
+      const quoteRow = document.createElement('DIV');
+      imageRow.classList = 'col-12 d-flex flex-wrap justify-content-center';
+      quoteRow.classList = 'col-12 d-flex flex-wrap justify-content-center';
 
-    const quoteContainer = document.createElement('DIV');
-    const quote = document.createElement('P');
-    const bookmark = document.createElement('I');
-    quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex mb-5 align-items-center justify-content-center';
-    quote.classList = 'col-10 mb-0';
-    bookmark.classList = 'col-2 fas fa-bookmark red';
-    quoteContainer.append(quote, bookmark)
-    quote.textContent = savedItemsLocal.items[i].quoteText;
+      const dogImg = document.createElement('IMG');
+      dogImg.src = savedItemsLocal.items[i].url;
+      dogImg.alt = savedItemsLocal.items[i].alt;
+      dogImg.classList = 'col-11 p-0 dog col-40 mb-1';
 
-    saveContainer.append(dogImg, quoteContainer);
+      const quoteContainer = document.createElement('DIV');
+      const quote = document.createElement('P');
+      const bookmark = document.createElement('I');
+      quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex mb-5 align-items-center justify-content-center';
+      quote.classList = 'col-10 mb-0';
+      bookmark.classList = 'col-2 fas fa-bookmark red';
+      quoteContainer.append(quote, bookmark)
+      quote.textContent = savedItemsLocal.items[i].quoteText;
+
+      imageRow.appendChild(dogImg)
+      quoteRow.append(quoteContainer);
+      saveContainer.append(imageRow, quoteRow);
+    }
   }
 }
 
@@ -272,6 +289,10 @@ function isOnHomePage() {
   }
 }
 
+function isOnDogOrFoxPage() {
+  return dogPageLocal.url !== undefined
+}
+
 function goToHomePage() {
   removeImageAndQuote();
   removeSaveContainer();
@@ -280,6 +301,8 @@ function goToHomePage() {
   removeErrorMessage();
   refreshBtn = null;
   resetLocalStorageObj();
+  localStorage.setItem(isOnSavedItemsPageKey, false);
+  isOnSavedItemsPage = JSON.parse(localStorage.getItem(isOnSavedItemsPageKey));
 }
 
 function showSaveContainer() {
@@ -329,11 +352,13 @@ function start() {
     const saved = new Saved();
     localStorage.setItem(savedKey, JSON.stringify(saved));
     localStorage.setItem(nextIdKey, 1)
+    localStorage.setItem(isOnSavedItemsPageKey, false)
   }
   dogPageLocal = JSON.parse(localStorage.getItem(dogPageDataKey));
   savedItemsLocal = JSON.parse(localStorage.getItem(savedKey));
-  nextIdLocal = JSON.parse(localStorage.getItem('nextId'));
-  if (dogPageLocal.url !== undefined) {
+  nextIdLocal = JSON.parse(localStorage.getItem(nextIdKey));
+  isOnSavedItemsPage = JSON.parse(localStorage.getItem(isOnSavedItemsPageKey));
+  if (isOnDogOrFoxPage()) {
     hideBtns();
     const dogImg = document.createElement('IMG');
     dogImg.src = dogPageLocal.url;
@@ -346,6 +371,8 @@ function start() {
     quote.textContent = dogPageLocal.quoteText;
 
     renderRefreshBtn();
+  } else if (isOnSavedItemsPage) {
+  renderSavedItemsOnClick();
   }
 }
 
