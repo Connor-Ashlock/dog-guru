@@ -1,6 +1,12 @@
 body {
-  font-family: Cochin, Cambria, Georgia, Times, 'Times New Roman', serif;
+  font-family: 'Acme', 'Archivo Black', 'Francois One', sans-serif;
   background-image: url(./images/Pawprint-Background.jpg);
+}
+
+p {
+  font-family: 'Baloo 2', cursive;
+  font-size: 18px;
+  /* letter-spacing: 1px; */
 }
 
 .btn-props:hover,
@@ -44,10 +50,6 @@ i {
   width: 228.98px;
 }
 
-#joke-btn {
-  color: yellow;
-}
-
 .btn-container,
 .spin-container,
 .error-container {
@@ -70,7 +72,11 @@ i {
   font-size: 1.5rem;
 }
 
-@media (min-width: 769px) {
+.red {
+  color: rgb(165, 3, 3);
+}
+
+@media (min-width: 666px) {
   .col-40 {
     max-width: 40%;
   }

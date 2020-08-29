@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
       integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
       crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Archivo+Black&family=Baloo+2&family=Francois+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
@@ -23,14 +24,18 @@
       </header>
       <div class="btn-container">
         <div class="row justify-content-center m-3">
-          <button id="advice-btn" class="btn-props p-3">Get Advice From A Dog</button>
+          <button id="advice-btn" class="btn-props p-3">Advice From A Dog</button>
         </div>
         <div class="row justify-content-center m-3">
-          <button id="joke-btn" class="btn-props p-3">Get Joke From A Fox</button>
+          <button id="joke-btn" class="btn-props p-3">Joke From A Fox</button>
+        </div>
+        <div class="row justify-content-center m-3">
+          <button id="save-btn" class="btn-props p-3">Saved Items</button>
         </div>
       </div>
+      <div id="save-container" class="row justify-content-center d-none"></div>
       <div id="dog-row" class="row justify-content-center"></div>
-      <div id="advice-row" class="row justify-content-center mt-4"></div>
+      <div id="advice-row" class="row justify-content-center mt-1"></div>
       <div class="d-flex justify-content-center">
         <div class="spinner-border quote-spinner d-none" role="status">
           <span class="sr-only">Loading...</span>
@@ -46,6 +51,7 @@
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="saved.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
