@@ -16,8 +16,9 @@ https://connor-ashlock.github.io/dog-guru/
 - Users can generate dog images along with helpful advice.
 - Users can generate fox images along with a funny joke.
 - Users can refresh the page to get a new image and quote.
+- Users can save and unsave their favorite images and quotes.
 
 ## Preview
 <p>
-  <img src="images/dog-guru-v2.gif" alt="dog-guru">
+  <img src="images/dog-guru.gif" alt="dog-guru">
 </p>
