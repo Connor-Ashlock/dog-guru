@@ -9,6 +9,7 @@ const saveContainer = document.getElementById('save-container');
 const dogPageDataKey = 'dogPageData';
 const savedKey = 'saved';
 const nextIdKey = 'nextId';
+let isOnSavedItemsPageKey = 'isOnSavedItemsPage';
 const loadingSpinner = document.querySelector('.spin-container');
 const errorMessage = document.querySelector('.error-container');
 const btnContainer = document.querySelector('.btn-container');
@@ -18,7 +19,7 @@ let refreshBtn = null;
 let savedItemsLocal = null;
 let nextIdLocal = null;
 let isOnSavedItemsPage = null;
-let isOnSavedItemsPageKey = 'isOnSavedItemsPage';
+let lastClicked = {};
 
 adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
@@ -163,25 +164,34 @@ function renderQuoteContainer() {
   quoteContainer.append(quote, bookmark)
   quoteParent.appendChild(quoteContainer);
 
-  if (!isOnSavedItemsPage) {
-    bookmark.addEventListener('click', saveOnClick)
-  } else {
-    // add bookmark.addEventListener('click', unsaveOnClick)
-    return;
-  }
-  function saveOnClick() {
-    bookmark.classList.add('red');
-    saveItemToLocalStorage();
-    bookmark.removeEventListener('click', saveOnClick);
-  }
+  const saveOnClickCallback = () => saveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback);
+  const unsaveOnClickCallback = () => unsaveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback);
+  bookmark.addEventListener('click', saveOnClickCallback);
+}
+
+function saveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback) {
+  bookmark.classList.add('red');
+  quoteContainer.setAttribute('data-id', nextIdLocal);
+  saveItemToLocalStorage();
+  bookmark.removeEventListener('click', saveOnClickCallback);
+  bookmark.addEventListener('click', unsaveOnClickCallback);
 }
 
 function saveItemToLocalStorage() {
-  savedItemsLocal.items[nextIdLocal++] = {
-    url: dogPageLocal.url,
-    quoteText: dogPageLocal.quoteText,
-    alt: dogPageLocal.alt
+  if (isOnSavedItemsPage) {
+    savedItemsLocal.items[nextIdLocal] = {
+      url: lastClicked.url,
+      quoteText: lastClicked.quoteText,
+      alt: lastClicked.alt,
+    }
+  } else {
+    savedItemsLocal.items[nextIdLocal] = {
+      url: dogPageLocal.url,
+      quoteText: dogPageLocal.quoteText,
+      alt: dogPageLocal.alt,
+    }
   }
+  savedItemsLocal.items[nextIdLocal].id = nextIdLocal++
   localStorage.setItem(savedKey, JSON.stringify(savedItemsLocal));
   localStorage.setItem(nextIdKey, JSON.stringify(nextIdLocal));
 }
@@ -197,15 +207,15 @@ function renderSavedItemsOnClick() {
     noSavedItems.classList = 'col-11 p-3 quote col-40 text-center';
     saveContainer.appendChild(noSavedItems);
   } else {
-    for (let i = 1; i < Object.keys(savedItemsLocal.items).length + 1; i++) {
+    for (const prop in savedItemsLocal.items) {
       const imageRow = document.createElement('DIV');
       const quoteRow = document.createElement('DIV');
       imageRow.classList = 'col-12 d-flex flex-wrap justify-content-center';
       quoteRow.classList = 'col-12 d-flex flex-wrap justify-content-center';
 
       const dogImg = document.createElement('IMG');
-      dogImg.src = savedItemsLocal.items[i].url;
-      dogImg.alt = savedItemsLocal.items[i].alt;
+      dogImg.src = savedItemsLocal.items[prop].url;
+      dogImg.alt = savedItemsLocal.items[prop].alt;
       dogImg.classList = 'col-11 p-0 dog col-40 mb-1';
 
       const quoteContainer = document.createElement('DIV');
@@ -215,18 +225,41 @@ function renderSavedItemsOnClick() {
       quote.classList = 'col-10 mb-0';
       bookmark.classList = 'col-2 fas fa-bookmark red';
       quoteContainer.append(quote, bookmark)
-      quote.textContent = savedItemsLocal.items[i].quoteText;
+      quote.textContent = savedItemsLocal.items[prop].quoteText;
 
-      imageRow.appendChild(dogImg)
+      quoteContainer.setAttribute('data-id', savedItemsLocal.items[prop].id);
+      imageRow.appendChild(dogImg);
       quoteRow.append(quoteContainer);
       saveContainer.append(imageRow, quoteRow);
+
+      const saveOnClickCallback = () => saveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback);
+      const unsaveOnClickCallback = () => unsaveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback);
+      bookmark.addEventListener('click', unsaveOnClickCallback);
     }
   }
 }
 
-function unsaveItemInLocal() {
-  // removes saved dog image and quote from savedItems local storage obj
+function unsaveItemInLocal(id) {
+  lastClickedItem(savedItemsLocal.items[id].url, savedItemsLocal.items[id].quoteText, savedItemsLocal.items[id].alt);
+  delete savedItemsLocal.items[id];
+  localStorage.setItem(savedKey, JSON.stringify(savedItemsLocal));
+}
 
+function unsaveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback) {
+  const id = quoteContainer.getAttribute('data-id');
+  unsaveItemInLocal(id);
+  quoteContainer.removeAttribute('data-id');
+  bookmark.classList.remove('red');
+  bookmark.removeEventListener('click', unsaveOnClickCallback);
+  bookmark.addEventListener('click', saveOnClickCallback);
+}
+
+function lastClickedItem(previousUrl, previousText, previousAlt) {
+  lastClicked = {
+    url: previousUrl,
+    quoteText: previousText,
+    alt: previousAlt,
+  }
 }
 
 function renderRefreshBtn() {
