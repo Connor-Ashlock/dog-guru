@@ -6,20 +6,24 @@ const dogParent = document.getElementById('dog-row');
 const quoteParent = document.getElementById('advice-row');
 const refreshBtnContainer = document.getElementById('refresh-btn-container');
 const saveContainer = document.getElementById('save-container');
-const dogPageDataKey = 'dogPageData';
-const savedKey = 'saved';
-const nextIdKey = 'nextId';
-let isOnSavedItemsPageKey = 'isOnSavedItemsPage';
 const loadingSpinner = document.querySelector('.spin-container');
 const errorMessage = document.querySelector('.error-container');
 const btnContainer = document.querySelector('.btn-container');
 const quoteSpinner = document.querySelector('.quote-spinner');
+const dogPageDataKey = 'dogPageData';
+const savedKey = 'saved';
+const nextIdKey = 'nextId';
+const isBookmarkedKey = 'isBookmarked';
+const lastClickedKey = 'lastClicked';
+let isOnSavedItemsPageKey = 'isOnSavedItemsPage';
 let dogPageLocal = null;
 let refreshBtn = null;
 let savedItemsLocal = null;
 let nextIdLocal = null;
 let isOnSavedItemsPage = null;
+let isBookmarked = null;
 let lastClicked = {};
+
 
 adviceBtn.addEventListener('click', renderDogAdviceOnClick);
 homeBtn.addEventListener('click', goToHomePage);
@@ -83,6 +87,12 @@ function renderAdviceQuote() {
           localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
           removeLoadingSpinner();
           removeQuoteSpinner();
+          if (isBookmarked) {
+            return;
+          } else {
+            localStorage.setItem(isBookmarkedKey, false);
+            isBookmarked = JSON.parse(localStorage.getItem(isBookmarkedKey));
+          }
         }
       } else {
         removeLoadingSpinner();
@@ -117,6 +127,12 @@ function renderFoxJokeOnClick() {
 
         dogPageLocal.quoteText = quote.textContent;
         localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
+        if (isBookmarked) {
+          return;
+        } else {
+          localStorage.setItem(isBookmarkedKey, false);
+          isBookmarked = JSON.parse(localStorage.getItem(isBookmarkedKey));
+        }
       }
       removeLoadingSpinner();
     },
@@ -166,10 +182,24 @@ function renderQuoteContainer() {
 
   const saveOnClickCallback = () => saveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback);
   const unsaveOnClickCallback = () => unsaveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback);
-  bookmark.addEventListener('click', saveOnClickCallback);
+
+  if (!isBookmarked) {
+    bookmark.addEventListener('click', saveOnClickCallback);
+  } else {
+    bookmark.addEventListener('click', unsaveOnClickCallback);
+    bookmark.classList.add('red');
+  }
 }
 
 function saveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback) {
+  if (isOnSavedItemsPage) {
+    const previousText = event.target.previousSibling.textContent;
+    const previousUrl = event.target.parentElement.parentElement.previousSibling.firstElementChild.src;
+    const previousAlt = event.target.parentElement.parentElement.previousSibling.firstElementChild.alt;
+    setLastClickedItem(previousUrl, previousText, previousAlt);
+  } else {
+    setLastClickedItem(dogPageLocal.url, dogPageLocal.quoteText, dogPageLocal.alt, nextIdLocal);
+  }
   bookmark.classList.add('red');
   quoteContainer.setAttribute('data-id', nextIdLocal);
   saveItemToLocalStorage();
@@ -194,6 +224,8 @@ function saveItemToLocalStorage() {
   savedItemsLocal.items[nextIdLocal].id = nextIdLocal++
   localStorage.setItem(savedKey, JSON.stringify(savedItemsLocal));
   localStorage.setItem(nextIdKey, JSON.stringify(nextIdLocal));
+  localStorage.setItem(isBookmarkedKey, true);
+  isBookmarked = JSON.parse(localStorage.getItem(isBookmarkedKey));
 }
 
 function renderSavedItemsOnClick() {
@@ -240,13 +272,15 @@ function renderSavedItemsOnClick() {
 }
 
 function unsaveItemInLocal(id) {
-  lastClickedItem(savedItemsLocal.items[id].url, savedItemsLocal.items[id].quoteText, savedItemsLocal.items[id].alt);
+  localStorage.setItem(isBookmarkedKey, false);
+  isBookmarked = JSON.parse(localStorage.getItem(isBookmarkedKey));
   delete savedItemsLocal.items[id];
   localStorage.setItem(savedKey, JSON.stringify(savedItemsLocal));
 }
 
 function unsaveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback) {
-  const id = quoteContainer.getAttribute('data-id');
+  const id = quoteContainer.getAttribute('data-id') || JSON.parse(localStorage.getItem(lastClickedKey)).id;
+  setLastClickedItem(savedItemsLocal.items[id].url, savedItemsLocal.items[id].quoteText, savedItemsLocal.items[id].alt, id);
   unsaveItemInLocal(id);
   quoteContainer.removeAttribute('data-id');
   bookmark.classList.remove('red');
@@ -254,12 +288,14 @@ function unsaveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnCl
   bookmark.addEventListener('click', saveOnClickCallback);
 }
 
-function lastClickedItem(previousUrl, previousText, previousAlt) {
+function setLastClickedItem(previousUrl, previousText, previousAlt, previousId) {
   lastClicked = {
     url: previousUrl,
     quoteText: previousText,
     alt: previousAlt,
+    id: previousId
   }
+  localStorage.setItem(lastClickedKey, JSON.stringify(lastClicked));
 }
 
 function renderRefreshBtn() {
@@ -286,6 +322,9 @@ function renderQuoteAndImg() {
   const dogImg = document.querySelector('IMG');
   removeImageAndQuote();
   removeErrorMessage();
+  localStorage.setItem(isBookmarkedKey, false);
+  isBookmarked = JSON.parse(localStorage.getItem(isBookmarkedKey));
+  localStorage.setItem(dogPageDataKey, JSON.stringify(dogPageLocal));
   if (dogPageLocal.isDog) {
     renderDogAdviceOnClick();
   } else {
@@ -334,6 +373,8 @@ function goToHomePage() {
   removeErrorMessage();
   refreshBtn = null;
   resetLocalStorageObj();
+  localStorage.setItem(isBookmarkedKey, false);
+  isBookmarked = JSON.parse(localStorage.getItem(isBookmarkedKey));
   localStorage.setItem(isOnSavedItemsPageKey, false);
   isOnSavedItemsPage = JSON.parse(localStorage.getItem(isOnSavedItemsPageKey));
 }
@@ -384,13 +425,16 @@ function start() {
     resetLocalStorageObj();
     const saved = new Saved();
     localStorage.setItem(savedKey, JSON.stringify(saved));
-    localStorage.setItem(nextIdKey, 1)
-    localStorage.setItem(isOnSavedItemsPageKey, false)
+    localStorage.setItem(nextIdKey, 1);
+    localStorage.setItem(isOnSavedItemsPageKey, false);
+    localStorage.setItem(isBookmarkedKey, false);
   }
   dogPageLocal = JSON.parse(localStorage.getItem(dogPageDataKey));
   savedItemsLocal = JSON.parse(localStorage.getItem(savedKey));
   nextIdLocal = JSON.parse(localStorage.getItem(nextIdKey));
   isOnSavedItemsPage = JSON.parse(localStorage.getItem(isOnSavedItemsPageKey));
+  isBookmarked = JSON.parse(localStorage.getItem(isBookmarkedKey));
+
   if (isOnDogOrFoxPage()) {
     hideBtns();
     const dogImg = document.createElement('IMG');
