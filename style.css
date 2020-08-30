@@ -9,6 +9,10 @@ p {
   /* letter-spacing: 1px; */
 }
 
+img {
+  object-fit: contain;
+}
+
 .btn-props:hover,
 i {
   cursor: pointer;
