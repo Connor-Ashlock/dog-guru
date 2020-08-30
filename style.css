@@ -6,11 +6,12 @@ body {
 p {
   font-family: 'Baloo 2', cursive;
   font-size: 18px;
-  /* letter-spacing: 1px; */
 }
 
 img {
-  object-fit: scale-down;
+  object-fit: fill;
+  max-width: 375px;
+  max-height: 400px;
 }
 
 .btn-props:hover,
