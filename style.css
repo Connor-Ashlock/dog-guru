@@ -8,12 +8,6 @@ p {
   font-size: 18px;
 }
 
-img {
-  object-fit: fill;
-  max-width: 250px;
-  max-height: 400px;
-}
-
 .btn-props:hover,
 i {
   cursor: pointer;
@@ -85,4 +79,12 @@ i {
   .col-40 {
     max-width: 40%;
   }
+}
+
+@media (max-width: 376px) {
+  img {
+  object-fit: fill;
+  max-width: 250px;
+  max-height: 300px;
+}
 }
