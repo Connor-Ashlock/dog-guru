@@ -81,7 +81,7 @@ i {
   }
 }
 
-@media (max-width: 376px) {
+@media (max-width: 668px) {
   img {
   object-fit: fill;
   max-width: 250px;
