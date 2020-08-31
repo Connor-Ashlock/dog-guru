@@ -173,11 +173,14 @@ function renderFoxJokeOnClick() {
 function renderQuoteContainer() {
   const quoteContainer = document.createElement('DIV');
   const quote = document.createElement('P');
+  const bookmarkContainer = document.createElement('DIV');
   const bookmark = document.createElement('I');
   quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex align-items-center justify-content-center';
   quote.classList = 'col-10 mb-0';
-  bookmark.classList = 'col-2 fas fa-bookmark';
-  quoteContainer.append(quote, bookmark)
+  bookmarkContainer.classList = 'col-2'
+  bookmark.classList = 'fas fa-bookmark';
+  bookmarkContainer.appendChild(bookmark);
+  quoteContainer.append(quote, bookmarkContainer);
   quoteParent.appendChild(quoteContainer);
 
   const saveOnClickCallback = () => saveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback);
@@ -193,9 +196,9 @@ function renderQuoteContainer() {
 
 function saveOnClick(bookmark, quoteContainer, saveOnClickCallback, unsaveOnClickCallback) {
   if (isOnSavedItemsPage) {
-    const previousText = event.target.previousSibling.textContent;
-    const previousUrl = event.target.parentElement.parentElement.previousSibling.firstElementChild.src;
-    const previousAlt = event.target.parentElement.parentElement.previousSibling.firstElementChild.alt;
+    const previousText = event.target.parentElement.previousSibling.textContent;
+    const previousUrl = event.target.parentElement.parentElement.parentElement.previousSibling.firstElementChild.src;
+    const previousAlt = event.target.parentElement.parentElement.parentElement.previousSibling.firstElementChild.alt;
     setLastClickedItem(previousUrl, previousText, previousAlt);
   } else {
     setLastClickedItem(dogPageLocal.url, dogPageLocal.quoteText, dogPageLocal.alt, nextIdLocal);
@@ -252,11 +255,14 @@ function renderSavedItemsOnClick() {
 
       const quoteContainer = document.createElement('DIV');
       const quote = document.createElement('P');
+      const bookmarkContainer = document.createElement('DIV');
       const bookmark = document.createElement('I');
       quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex mb-5 align-items-center justify-content-center';
       quote.classList = 'col-10 mb-0';
-      bookmark.classList = 'col-2 fas fa-bookmark red';
-      quoteContainer.append(quote, bookmark)
+      bookmarkContainer.classList = 'col-2'
+      bookmark.classList = 'fas fa-bookmark red';
+      bookmarkContainer.appendChild(bookmark);
+      quoteContainer.append(quote, bookmarkContainer);
       quote.textContent = savedItemsLocal.items[prop].quoteText;
 
       quoteContainer.setAttribute('data-id', savedItemsLocal.items[prop].id);
