@@ -77,13 +77,15 @@ i {
 
 @media (min-width: 666px) {
   .col-40 {
-    max-width: 40%;
+    max-width: 70%;
+    max-height: 500px;
+    object-fit: cover;
   }
 }
 
 @media (max-width: 668px) {
   img {
-  object-fit: contain;
+  object-fit: cover;
   max-height: 300px;
 }
 }

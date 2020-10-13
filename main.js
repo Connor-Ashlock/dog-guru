@@ -49,7 +49,7 @@ function renderDogImage() {
         const dogImg = document.createElement('IMG');
         dogImg.src = data.url;
         dogImg.alt = 'Dog';
-        dogImg.classList = 'col-11 p-0 dog col-40';
+        dogImg.classList = 'col-11 p-0 dog col-40 mb-2';
         dogParent.appendChild(dogImg);
 
         dogPageLocal.url = dogImg.src;
@@ -151,7 +151,7 @@ function renderFoxJokeOnClick() {
         const dogImg = document.createElement('IMG');
         dogImg.src = data.image;
         dogImg.alt = 'Fox';
-        dogImg.classList = 'col-11 p-0 dog col-40';
+        dogImg.classList = 'col-11 p-0 dog col-40 mb-2';
         dogParent.appendChild(dogImg);
 
         dogPageLocal.url = dogImg.src;
@@ -175,7 +175,7 @@ function renderQuoteContainer() {
   const quote = document.createElement('P');
   const bookmarkContainer = document.createElement('DIV');
   const bookmark = document.createElement('I');
-  quoteContainer.classList = 'col-11 p-3 quote col-40 d-flex align-items-center justify-content-center';
+  quoteContainer.classList = 'col-11 p-3 quote col-40 mb-5 d-flex align-items-center justify-content-center';
   quote.classList = 'col-10 mb-0';
   bookmarkContainer.classList = 'col-2'
   bookmark.classList = 'fas fa-bookmark';
@@ -251,7 +251,7 @@ function renderSavedItemsOnClick() {
       const dogImg = document.createElement('IMG');
       dogImg.src = savedItemsLocal.items[prop].url;
       dogImg.alt = savedItemsLocal.items[prop].alt;
-      dogImg.classList = 'col-11 p-0 dog col-40 mb-1';
+      dogImg.classList = 'col-11 p-0 dog col-40 mb-2';
 
       const quoteContainer = document.createElement('DIV');
       const quote = document.createElement('P');
@@ -446,7 +446,7 @@ function start() {
     const dogImg = document.createElement('IMG');
     dogImg.src = dogPageLocal.url;
     dogImg.alt = dogPageLocal.alt;
-    dogImg.classList = 'col-11 p-0 dog col-40';
+    dogImg.classList = 'col-11 p-0 dog col-40 mb-2';
     dogParent.appendChild(dogImg);
 
     renderQuoteContainer();
